@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('email');
             $table->string('phone');
+            $table->string('name');
+            $table->string('delivery');
             $table->decimal('total', 10, 2);
             $table->timestamps();
         });

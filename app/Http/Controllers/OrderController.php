@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;  // ← esto falta
 use App\Http\Controllers\Controller;
 use App\Models\Order;
@@ -13,6 +14,8 @@ class OrderController extends Controller
         $request->validate([
             'email' => 'required|email',
             'phone' => 'required',
+            'name' => 'required',
+            'delivery' => 'required',
             'items' => 'required|array'
         ]);
 
@@ -29,6 +32,8 @@ class OrderController extends Controller
             $order = Order::create([
                 'email' => $request->email,
                 'phone' => $request->phone,
+                'name' => $request->name,
+                'delivery' => $request->delivery,
                 'total' => $total
             ]);
 
@@ -39,6 +44,7 @@ class OrderController extends Controller
                     'name_snapshot' => $item['name'],
                     'price_snapshot' => $item['price'],
                     'quantity' => $item['quantity'],
+                    'name' => $item['name'],
                     'subtotal' => $item['price'] * $item['quantity']
                 ]);
             }

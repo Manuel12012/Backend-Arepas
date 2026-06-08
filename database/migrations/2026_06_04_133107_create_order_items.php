@@ -20,7 +20,6 @@ return new class extends Migration
             $table->decimal('price_snapshot', 10, 2);
             $table->integer('quantity');
             $table->decimal('subtotal', 10, 2);
-
             $table->timestamps();
         });
     }
