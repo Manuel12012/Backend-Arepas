@@ -109,4 +109,12 @@ class ProductController extends Controller
             'message' => 'Producto eliminado'
         ]);
     }
+
+    public function count()
+    {
+
+        return response()->json([
+            'total' => Product::count()
+        ]);
+    }
 }

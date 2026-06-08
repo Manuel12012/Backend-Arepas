@@ -5,6 +5,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/products/total-productos', [ProductController::class, 'count']);
+
 Route::apiResource(
     'products',
     ProductController::class
