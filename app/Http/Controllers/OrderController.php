@@ -16,6 +16,9 @@ class OrderController extends Controller
             'phone' => 'required',
             'name' => 'required',
             'delivery' => 'required',
+            'address' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
             'items' => 'required|array'
         ]);
 
@@ -34,6 +37,9 @@ class OrderController extends Controller
                 'phone' => $request->phone,
                 'name' => $request->name,
                 'delivery' => $request->delivery,
+                'address' => $request->address,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
                 'total' => $total
             ]);
 
@@ -44,7 +50,6 @@ class OrderController extends Controller
                     'name_snapshot' => $item['name'],
                     'price_snapshot' => $item['price'],
                     'quantity' => $item['quantity'],
-                    'name' => $item['name'],
                     'subtotal' => $item['price'] * $item['quantity']
                 ]);
             }
