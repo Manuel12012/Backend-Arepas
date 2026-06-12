@@ -16,9 +16,8 @@ class OrderController extends Controller
             'phone' => 'required',
             'name' => 'required',
             'delivery' => 'required',
-            'address' => 'required',
-            'latitude' => 'required',
-            'longitude' => 'required',
+            'latitude' => 'nullable',
+            'longitude' => 'nullable',
             'items' => 'required|array'
         ]);
 
@@ -37,10 +36,10 @@ class OrderController extends Controller
                 'phone' => $request->phone,
                 'name' => $request->name,
                 'delivery' => $request->delivery,
-                'address' => $request->address,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'total' => $total
+                'total' => $total,
+                'status' => "Sin asignar"
             ]);
 
             foreach ($request->items as $item) {
@@ -64,5 +63,18 @@ class OrderController extends Controller
     public function index()
     {
         return Order::with('items')->latest()->get();
+    }
+
+    public function update(Request $request, Order $order)
+    {
+        $request->validate([
+            'status' => 'required|in:Sin asignar,Entregado,Cancelado'
+        ]);
+
+        $order->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json($order);
     }
 }

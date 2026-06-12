@@ -28,7 +28,6 @@ class ProductController extends Controller
             'precio' => 'required',
             'combo' => 'nullable',
             'unidadCombo' => 'nullable',
-
             'image' => 'nullable|image|max:5120'
 
         ]);
@@ -115,6 +114,14 @@ class ProductController extends Controller
 
         return response()->json([
             'total' => Product::count()
+        ]);
+    }
+
+    public function countCategorias()
+    {
+        return response()->json([
+            'total' => Product::distinct('categoriaId')
+                ->count('categoriaId')
         ]);
     }
 }

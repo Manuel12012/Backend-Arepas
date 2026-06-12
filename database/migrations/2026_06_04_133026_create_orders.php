@@ -21,6 +21,11 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->decimal('total', 10, 2);
+            $table->enum('status', [
+                'Sin asignar',
+                'Entregado',
+                'Cancelado'
+            ])->default('Sin asignar');
             $table->timestamps();
         });
     }

@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    protected $fillable = ['email', 'phone','name','delivery', 'total', 'address', 'longitude', 'latitude' ];
+    protected $fillable = ['email', 'phone','name','delivery', 'total', 'longitude', 'latitude', 'status' ];
 
     public function items()
     {
