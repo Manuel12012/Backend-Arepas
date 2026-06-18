@@ -18,6 +18,7 @@ class OrderController extends Controller
             'delivery' => 'required',
             'latitude' => 'nullable',
             'longitude' => 'nullable',
+            'scheduled_for' => 'nullable|date|after:now',
             'items' => 'required|array'
         ]);
 
@@ -38,6 +39,7 @@ class OrderController extends Controller
                 'delivery' => $request->delivery,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
+                'scheduled_for' => $request->scheduled_for,
                 'total' => $total,
                 'status' => "Sin asignar"
             ]);
