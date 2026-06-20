@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\DeliverySetting;
 
 class OrderController extends Controller
 {
@@ -16,8 +17,8 @@ class OrderController extends Controller
             'phone' => 'required',
             'name' => 'required',
             'delivery' => 'required',
-            'latitude' => 'nullable',
-            'longitude' => 'nullable',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
             'scheduled_for' => 'nullable|date|after:now',
             'items' => 'required|array'
         ]);
@@ -27,11 +28,42 @@ class OrderController extends Controller
         DB::transaction(function () use ($request, &$order) {
 
             $total = 0;
+            $distanceKm = null;
+            $freeDelivery = false;
+            $deliveryCost = 0;
 
             foreach ($request->items as $item) {
                 $total += $item['price'] * $item['quantity'];
             }
 
+            if (
+                $request->delivery === 'delivery' &&
+                $request->latitude !== null &&
+                $request->longitude !== null
+            ) {
+
+                $settings = DeliverySetting::first();
+
+                if ($settings) {
+
+                    $distanceKm =
+                        $this->calculateDistance(
+                            (float)$settings->store_latitude,
+                            (float)$settings->store_longitude,
+                            (float)$request->latitude,
+                            (float)$request->longitude
+                        );
+
+                    $freeDelivery =
+                        $distanceKm <=
+                        $settings->free_radius_km;
+
+                    $deliveryCost =
+                        $freeDelivery
+                        ? 0
+                        : $settings->delivery_cost;
+                }
+            }
             $order = Order::create([
                 'email' => $request->email,
                 'phone' => $request->phone,
@@ -41,7 +73,19 @@ class OrderController extends Controller
                 'longitude' => $request->longitude,
                 'scheduled_for' => $request->scheduled_for,
                 'total' => $total,
-                'status' => "Sin asignar"
+
+                'distance_km' =>
+                $distanceKm !== null
+                    ? round($distanceKm, 2)
+                    : null,
+
+                'free_delivery' =>
+                $freeDelivery,
+
+                'delivery_cost' =>
+                $deliveryCost,
+
+                'status' => 'Sin asignar'
             ]);
 
             foreach ($request->items as $item) {
@@ -78,5 +122,33 @@ class OrderController extends Controller
         ]);
 
         return response()->json($order);
+    }
+
+    private function calculateDistance(
+        float $lat1,
+        float $lon1,
+        float $lat2,
+        float $lon2
+    ): float {
+
+        $earthRadius = 6371;
+
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+
+        $a =
+            sin($dLat / 2) * sin($dLat / 2) +
+            cos(deg2rad($lat1)) *
+            cos(deg2rad($lat2)) *
+            sin($dLon / 2) *
+            sin($dLon / 2);
+
+        $c =
+            2 * atan2(
+                sqrt($a),
+                sqrt(1 - $a)
+            );
+
+        return $earthRadius * $c;
     }
 }
