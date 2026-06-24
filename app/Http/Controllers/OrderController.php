@@ -27,13 +27,14 @@ class OrderController extends Controller
 
         DB::transaction(function () use ($request, &$order) {
 
-            $total = 0;
             $distanceKm = null;
             $freeDelivery = false;
             $deliveryCost = 0;
 
+            $itemsTotal = 0;
+
             foreach ($request->items as $item) {
-                $total += $item['price'] * $item['quantity'];
+                $itemsTotal += $item['price'] * $item['quantity'];
             }
 
             if (
@@ -72,7 +73,7 @@ class OrderController extends Controller
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'scheduled_for' => $request->scheduled_for,
-                'total' => $total,
+                'total' => $itemsTotal + $deliveryCost,
 
                 'distance_km' =>
                 $distanceKm !== null
