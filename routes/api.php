@@ -3,7 +3,10 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeliverySettingController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProductController;
+use App\Mail\TestEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/products/total-productos', [ProductController::class, 'count']);
@@ -32,3 +35,17 @@ Route::put(
     '/admin/delivery-settings',
     [DeliverySettingController::class, 'update']
 );
+
+
+// test email
+
+Route::post('/forgot-password', [PasswordResetController::class, 'forgot']);
+Route::post('/reset-password', [PasswordResetController::class, 'reset']);
+
+// Route::get('/test-email', function () {
+
+//     Mail::to('manuelmezarivas120@gmail.com')
+//         ->send(new TestEmail());
+
+//     return 'Correo enviado.';
+// });
