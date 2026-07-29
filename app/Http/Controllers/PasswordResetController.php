@@ -37,7 +37,7 @@ class PasswordResetController extends Controller
 
         // 3. enviar correo con Resend (simple HTML)
         Mail::raw("Haz clic para restablecer tu contraseña: $resetUrl", function ($message) use ($user) {
-            $message->to("manuelmezarivas120@gmail.com")
+            $message->to($user->email)
                 ->subject('Recuperación de contraseña');
         });
 

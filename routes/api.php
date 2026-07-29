@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\DeliverySettingController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PasswordResetController;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/products/total-productos', [ProductController::class, 'count']);
 Route::get('/products/count-categorias', [ProductController::class, 'countCategorias']);
 Route::put('/orders/{order}', [OrderController::class, 'update']);
+Route::apiResource('categories', CategorieController::class);
 Route::apiResource(
     'products',
     ProductController::class

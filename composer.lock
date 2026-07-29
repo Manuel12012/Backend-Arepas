@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "69eda5d79d8e3c9332331b88227e09a0",
+    "content-hash": "0820b55938fcbf56534c823505775dc5",
     "packages": [
         {
             "name": "brick/math",
@@ -3434,21 +3434,23 @@
         },
         {
             "name": "resend/resend-php",
-            "version": "v1.4.0",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/resend/resend-php.git",
-                "reference": "24e4f0507316776bc6a7c9136b2832ea2ecba6c3"
+                "reference": "9516207c4f6ff210c64b193e31074e925dd6193a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/resend/resend-php/zipball/24e4f0507316776bc6a7c9136b2832ea2ecba6c3",
-                "reference": "24e4f0507316776bc6a7c9136b2832ea2ecba6c3",
+                "url": "https://api.github.com/repos/resend/resend-php/zipball/9516207c4f6ff210c64b193e31074e925dd6193a",
+                "reference": "9516207c4f6ff210c64b193e31074e925dd6193a",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "^7.5",
-                "php": "^8.1.0"
+                "guzzlehttp/guzzle": "^7.8.2 || ^8.0",
+                "guzzlehttp/psr7": "^2.6.3 || ^3.0",
+                "php": "^8.1.0",
+                "psr/http-client": "^1.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.13",
@@ -3485,9 +3487,9 @@
             ],
             "support": {
                 "issues": "https://github.com/resend/resend-php/issues",
-                "source": "https://github.com/resend/resend-php/tree/v1.4.0"
+                "source": "https://github.com/resend/resend-php/tree/v1.7.0"
             },
-            "time": "2026-06-26T21:11:51+00:00"
+            "time": "2026-07-27T21:14:02+00:00"
         },
         {
             "name": "symfony/clock",
@@ -8597,5 +8599,5 @@
         "php": "^8.2"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
