@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/products/total-productos', [ProductController::class, 'count']);
 Route::get('/products/count-categorias', [ProductController::class, 'countCategorias']);
+Route::get('/categories/count',[CategorieController::class, 'count']);
 Route::put('/orders/{order}', [OrderController::class, 'update']);
 Route::apiResource('categories', CategorieController::class);
 Route::apiResource(
