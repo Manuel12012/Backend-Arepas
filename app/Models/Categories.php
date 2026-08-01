@@ -10,4 +10,9 @@ class Categories extends Model
         'nombre',
         'image',
     ];
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

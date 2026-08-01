@@ -11,17 +11,26 @@ class ProductController extends Controller
     public function index()
     {
         return Cache::remember('products', 3600, function () {
-            return Product::select([
-                'id', 'categoriaId', 'nombre', 'descripcion',
-                'precio', 'combo', 'unidadCombo', 'image',
-            ])->orderBy('nombre')->get();
+            return Product::with('category')
+                ->select([
+                    'id',
+                    'category_id',
+                    'nombre',
+                    'descripcion',
+                    'precio',
+                    'combo',
+                    'unidadCombo',
+                    'image',
+                ])
+                ->orderBy('nombre')
+                ->get();
         });
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'categoriaId' => 'required',
+            'category_id' => 'required',
             'nombre' => 'required',
             'descripcion' => 'nullable',
             'precio' => 'required',
@@ -49,7 +58,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'categoriaId' => 'required',
+            'category_id' => 'required',
             'nombre' => 'required',
             'descripcion' => 'nullable',
             'precio' => 'required',
@@ -86,7 +95,7 @@ class ProductController extends Controller
     public function countCategorias()
     {
         return response()->json([
-            'total' => Product::distinct('categoriaId')->count('categoriaId')
+            'total' => Product::distinct('category_id')->count('category_idc')
         ]);
     }
 }
