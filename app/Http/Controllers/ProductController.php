@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -26,7 +27,6 @@ class ProductController extends Controller
                 ->get();
         });
     }
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -36,18 +36,18 @@ class ProductController extends Controller
             'precio' => 'required',
             'combo' => 'nullable',
             'unidadCombo' => 'nullable',
-            'image' => 'nullable|image|max:5120'
+            'image' => 'nullable|image|max:5120',
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = $request->file('image')->store('products', 's3');
         }
 
         $product = Product::create($validated);
 
-        Cache::forget('products');   // 👈 invalida el caché
+        Cache::forget('products');
 
-        return $product;
+        return response()->json($product, 201);
     }
 
     public function show(Product $product)
@@ -68,23 +68,34 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+
+            if ($product->getRawOriginal('image')) {
+                Storage::disk('s3')->delete($product->getRawOriginal('image'));
+            }
+
+            $validated['image'] = $request->file('image')->store('products', 's3');
         }
 
         $product->update($validated);
 
-        Cache::forget('products');   // 👈 invalida el caché
+        Cache::forget('products');
 
-        return $product;
+        return $product->fresh();
     }
 
     public function destroy(Product $product)
     {
+        if ($product->getRawOriginal('image')) {
+            Storage::disk('s3')->delete($product->getRawOriginal('image'));
+        }
+
         $product->delete();
 
-        Cache::forget('products');   // 👈 invalida el caché
+        Cache::forget('products');
 
-        return response()->json(['message' => 'Producto eliminado']);
+        return response()->json([
+            'message' => 'Producto eliminado'
+        ]);
     }
 
     public function count()

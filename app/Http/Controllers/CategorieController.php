@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class CategorieController extends Controller
 {
@@ -21,13 +22,13 @@ class CategorieController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = $request->file('image')->store('categories', 's3');
         }
 
         $categorie = Categories::create($validated);
 
         Cache::forget('categories');
-        return $categorie;
+        return response()->json($categorie, 201);
     }
 
     public function update(Request $request, Categories $category)
@@ -36,27 +37,34 @@ class CategorieController extends Controller
             "nombre" => "required",
             "image" => "nullable|image|max:5120"
         ]);
-
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+
+            if ($category->getRawOriginal('image')) {
+                Storage::disk('s3')->delete($category->getRawOriginal('image'));
+            }
+
+            $validated['image'] = $request->file('image')->store('categories', 's3');
         }
 
         $category->update($validated);
 
-        return $category;
+        Cache::forget('categories');
+
+        return $category->fresh();
     }
 
     public function destroy(Categories $category)
     {
-        $id = $category->id;
+        if ($category->getRawOriginal('image')) {
+            Storage::disk('s3')->delete($category->getRawOriginal('image'));
+        }
 
-        $deleted = $category->delete();
+        $category->delete();
+
+        Cache::forget('categories');
 
         return response()->json([
-            'id' => $id,
-            'deleted' => $deleted,
-            'find' => Categories::find($id),
-            'count' => Categories::count(),
+            'message' => 'Categoria eliminada'
         ]);
     }
 
