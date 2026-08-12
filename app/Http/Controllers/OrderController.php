@@ -104,12 +104,12 @@ class OrderController extends Controller
         return response()->json([
             'message' => 'Order created',
             'order' => $order
-        ]);
+        ]); 
     }
 
     public function index()
     {
-        return Order::with('items')->latest()->get();
+        return Order::with('items')->latest()->paginate(1);
     }
 
     public function update(Request $request, Order $order)
