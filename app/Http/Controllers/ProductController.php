@@ -12,10 +12,11 @@ class ProductController extends Controller
     public function index()
     {
         return Cache::remember('products', 3600, function () {
-            return Product::with('category')
+            return Product::with(['category', "offer"])
                 ->select([
                     'id',
                     'category_id',
+                    'offer_id',
                     'nombre',
                     'descripcion',
                     'precio',
@@ -52,9 +53,13 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        return $product;
-    }
+        $product->load([
+            'category',
+            'offer',
+        ]);
 
+        return response()->json($product);
+    }
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
@@ -108,5 +113,21 @@ class ProductController extends Controller
         return response()->json([
             'total' => Product::distinct('category_id')->count('category_idc')
         ]);
+    }
+
+    public function assignOffer(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'offer_id' => 'required|exists:offer,id',
+        ]);
+
+        $product->offer_id = $validated['offer_id'];
+        $product->save();
+
+        Cache::forget('products');
+
+        return response()->json(
+            $product->fresh()->load('offer')
+        );
     }
 }

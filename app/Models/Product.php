@@ -15,12 +15,19 @@ class Product extends Model
         'combo',
         'unidadCombo',
         'image',
+        "offer_id"
     ];
 
     public function category()
     {
         return $this->belongsTo(Categories::class);
     }
+
+    public function offer()
+    {
+        return $this->belongsTo(Offer::class);
+    }
+
 
     public function getImageAttribute($value)
     {

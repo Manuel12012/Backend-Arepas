@@ -11,21 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasColumn('products', 'categoriaId')) {
-            Schema::table('products', function (Blueprint $table) {
-                $table->dropColumn('categoriaId');
-            });
-        }
+        Schema::create('offer', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->date("inicio");
+            $table->date("fin");
+            $table->decimal("descuento", 8,2);
+        });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('offer');
     }
 };
