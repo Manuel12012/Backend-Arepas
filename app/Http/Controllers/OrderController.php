@@ -109,7 +109,7 @@ class OrderController extends Controller
 
     public function index()
     {
-        return Order::with('items')->latest()->paginate(1);
+        return Order::with('items')->latest()->paginate(10);
     }
 
     public function update(Request $request, Order $order)
