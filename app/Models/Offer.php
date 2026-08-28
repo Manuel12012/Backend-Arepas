@@ -14,8 +14,8 @@ class Offer extends Model
         'descuento',
     ];
 
-    public function product()
+    public function products()
     {
-        return $this->hasOne(Product::class);
+        return $this->hasMany(Product::class);
     }
 }

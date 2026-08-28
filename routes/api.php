@@ -25,7 +25,6 @@ Route::put(
     [ProductController::class, 'assignOffer']
 );
 
-
 /*
 |--------------------------------------------------------------------------
 | Categories
@@ -43,6 +42,8 @@ Route::apiResource('categories', CategorieController::class);
 |--------------------------------------------------------------------------
 */
 
+Route::get('/offers/{offerId}/products', [OfferController::class, 'getProducts']);
+Route::delete('/offers/{offerId}/products/{productId}', [OfferController::class, 'detachProduct']);
 Route::apiResource('offers', OfferController::class);
 
 

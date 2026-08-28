@@ -124,7 +124,6 @@ class OrderController extends Controller
 
         return response()->json($order);
     }
-
     private function calculateDistance(
         float $lat1,
         float $lon1,

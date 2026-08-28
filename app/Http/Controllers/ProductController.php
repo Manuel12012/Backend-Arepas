@@ -9,24 +9,27 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Cache::remember('products', 3600, function () {
-            return Product::with(['category', "offer"])
-                ->select([
-                    'id',
-                    'category_id',
-                    'offer_id',
-                    'nombre',
-                    'descripcion',
-                    'precio',
-                    'combo',
-                    'unidadCombo',
-                    'image',
-                ])
-                ->orderBy('nombre')
-                ->get();
-        });
+        $query = Product::with(['category', 'offer'])
+            ->select([
+                'id',
+                'category_id',
+                'offer_id',
+                'nombre',
+                'descripcion',
+                'precio',
+                'combo',
+                'unidadCombo',
+                'image',
+            ])
+            ->orderBy('nombre');
+
+        if ($request->boolean('without_offer')) {
+            $query->whereNull('offer_id');
+        }
+
+        return $query->get();
     }
     public function store(Request $request)
     {
